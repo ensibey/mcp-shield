@@ -1,0 +1,40 @@
+name: "mcp-shield Security Scan"
+description: "Zero-dependency security scanner for Model Context Protocol (MCP) configs and tool manifests (SARIF 2.1.0)."
+author: "Enis Doğan"
+
+branding:
+  icon: "shield"
+  color: "red"
+
+inputs:
+  target:
+    description: "Path to mcp.json or claude_desktop_config.json"
+    required: true
+  format:
+    description: "Output format: text, json, sarif, markdown"
+    required: false
+    default: "text"
+  fail-on:
+    description: "Fail CI on severity >= threshold (LOW, MEDIUM, HIGH, CRITICAL, NONE)"
+    required: false
+    default: "HIGH"
+  output:
+    description: "Optional file path for report output (e.g., mcp-shield.sarif)"
+    required: false
+    default: ""
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+    - name: Run mcp-shield
+      shell: bash
+      run: |
+        ARGS="scan ${{ inputs.target }} --format ${{ inputs.format }} --fail-on ${{ inputs.fail-on }}"
+        if [ -n "${{ inputs.output }}" ]; then
+          ARGS="$ARGS --output ${{ inputs.output }}"
+        fi
+        PYTHONPATH="${{ github.action_path }}" python -m mcp_shield $ARGS
