@@ -1,0 +1,26 @@
+{
+  "mcpServers": {
+    "workspace-fs": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem@0.6.2", "/workspace/docs"],
+      "env": {
+        "DOCS_API_TOKEN": "${DOCS_API_TOKEN}"
+      },
+      "tools": [
+        {
+          "name": "docs_search",
+          "description": "Searches project Markdown documentation inside the scoped workspace folder.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "query": { "type": "string", "description": "Search query string" }
+            }
+          }
+        }
+      ]
+    },
+    "internal-api": {
+      "url": "https://mcp.internal.example.com/sse"
+    }
+  }
+}
